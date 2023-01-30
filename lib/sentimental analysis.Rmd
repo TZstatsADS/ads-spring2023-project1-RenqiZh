@@ -1,0 +1,94 @@
+packages.used=c("rvest", "tibble", 
+                "sentimentr", "gplots", "dplyr",
+                "tm", "syuzhet", "factoextra", 
+                "beeswarm", "scales", "RColorBrewer",
+                "RANN", "topicmodels", "stringr")
+# check packages that need to be installed.
+packages.needed=setdiff(packages.used, 
+                        intersect(installed.packages()[,1], 
+                                  packages.used))
+# install additional packages
+if(length(packages.needed)>0){
+  install.packages(packages.needed, dependencies = TRUE)
+}
+# load packages
+library("rvest")
+library("tibble")
+library("syuzhet")
+library("sentimentr")
+library("gplots")
+library("dplyr")
+library("tm")
+library("syuzhet")
+library("factoextra")
+library("beeswarm")
+library("scales")
+library("RColorBrewer")
+library("RANN")
+library("tm")
+library("topicmodels")
+library("stringr")
+
+dat <- read.csv(file ='/Users/fuckmylife/Documents/GitHub/ads-spring2023-project1-RenqiZh/data/philosophy_data.csv')
+
+###marx sentimental analysis
+marx2 <- subset(dat,author=='Marx')[1:5000,]
+rownames(marx2) <- NULL
+marx <- select(marx2,school,author,sentence_lowered,sentence_length)
+
+marx_NRCdf <- get_nrc_sentiment(marx$sentence_lowered)
+marx_emotiondf <- cbind(marx,marx_NRCdf)
+
+###bar plot of percentage of emotions for marx
+barplot(sort(colSums(prop.table(marx_emotiondf[, 5:12]))), 
+  col='blue',
+  horiz = TRUE,
+  cex.names = 0.5,
+  las = 1,
+  main = "Emotions in Marx text", 
+  xlab="Percentage")
+  
+###Smith sentimental analysis
+smith2 <- subset(dat,author=='Smith')[1:5000,]
+rownames(smith2) <- NULL
+smith <- select(smith2,school,author,sentence_lowered,sentence_length)
+
+smith_NRCdf <- get_nrc_sentiment(smith$sentence_lowered)
+smith_emotiondf <- cbind(smith,smith_NRCdf)
+
+###bar plot of percentage of emotions for smith
+barplot(sort(colSums(prop.table(smith_emotiondf[, 5:12]))), 
+  col='blue',
+  horiz = TRUE,
+  cex.names = 0.5,
+  las = 1,
+  main = "Emotions in Smith text", 
+  xlab="Percentage")
+  
+emotions.types=c("anticipation", "joy", "surprise", "trust",
+                 "anger", "disgust", "fear", "sadness")
+
+smith_emotiondf$sum <- rowSums(smith_emotiondf[, c("anger","anticipation","disgust","fear","joy","sadness","surprise","trust")])
+
+marx_emotiondf$sum <- rowSums(marx_emotiondf[, c("anger","anticipation","disgust","fear","joy","sadness","surprise","trust")])
+
+###top 3 emotio charged sentences of marx
+marx_top3 <- marx_emotiondf %>% top_n(3,sum)
+marx_top3$sentence_lowered
+
+###top 3 emotio charged sentences of smith
+smith_top3 <- smith_emotiondf %>% top_n(3,sum)
+smith_top3$sentence_lowered
+
+
+###cluster analysis for smith
+heatmap.2(cor(smith_emotiondf%>%select(anger:trust)), 
+          scale = "none", 
+          col = bluered(100), , margin=c(6, 6), key=F,
+          trace = "none", density.info = "none")
+
+###cluster analysis for marx
+heatmap.2(cor(marx_emotiondf%>%select(anger:trust)), 
+          scale = "none", 
+          col = bluered(100), , margin=c(6, 6), key=F,
+          trace = "none", density.info = "none")

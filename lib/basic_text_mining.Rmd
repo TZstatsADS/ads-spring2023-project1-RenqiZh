@@ -1,0 +1,69 @@
+install.packages(c('tm', 'SnowballC', 'wordcloud', 'topicmodels'))
+
+###get the three school that has the most quotes
+top_3_school <- dat %>% 
+  group_by(school) %>% 
+  summarise(n = n()) %>% 
+  arrange(desc(n)) %>% 
+  head(3) %>%
+  pull(school) %>% 
+  as.list
+
+###temp=subset(dat,school=='plato')
+for (i in top_3_school) {
+      print(i)
+      temp=subset(dat,dat$school==i)
+      philo_corpus = Corpus(VectorSource(temp$sentence_str))
+      philo_corpus = tm_map(philo_corpus, content_transformer(tolower))
+      philo_corpus = tm_map(philo_corpus, removeNumbers)
+      philo_corpus = tm_map(philo_corpus, removePunctuation)
+      philo_corpus = tm_map(philo_corpus, removeWords, c("the", "and", stopwords("english")))
+      philo_corpus =  tm_map(philo_corpus, stripWhitespace)
+      philo_dtm <- DocumentTermMatrix(philo_corpus)
+      philo_dtm = removeSparseTerms(philo_dtm, 0.99)
+      freq = data.frame(sort(colSums(as.matrix(philo_dtm)), decreasing=TRUE))
+      wordcloud(rownames(freq), freq[,1], max.words=50, colors=brewer.pal(4, "Spectral"))
+      philo_dtm_tfidf <- DocumentTermMatrix(philo_corpus, control = list(weighting = weightTfIdf))
+      philo_dtm_tfidf = removeSparseTerms(philo_dtm_tfidf, 0.99)
+      freq = data.frame(sort(colSums(as.matrix(philo_dtm_tfidf)), decreasing=TRUE))
+      wordcloud(rownames(freq), freq[,1], max.words=50, colors=brewer.pal(4, "Spectral"))
+}
+
+auth_list= c('Smith','Marx')
+
+###temp=subset(dat,author == '')
+for (i in auth_list) {
+      print(i)
+      temp=subset(dat,dat$author==i)
+      philo_corpus = Corpus(VectorSource(temp$sentence_str))
+      philo_corpus = tm_map(philo_corpus, content_transformer(tolower))
+      philo_corpus = tm_map(philo_corpus, removeNumbers)
+      philo_corpus = tm_map(philo_corpus, removePunctuation)
+      philo_corpus = tm_map(philo_corpus, removeWords, c("the", "and", stopwords("english")))
+      philo_corpus =  tm_map(philo_corpus, stripWhitespace)
+      philo_dtm <- DocumentTermMatrix(philo_corpus)
+      philo_dtm = removeSparseTerms(philo_dtm, 0.99)
+      freq = data.frame(sort(colSums(as.matrix(philo_dtm)), decreasing=TRUE))
+      wordcloud(rownames(freq), freq[,1], max.words=50, colors=brewer.pal(4, "Spectral"))
+      philo_dtm_tfidf <- DocumentTermMatrix(philo_corpus, control = list(weighting = weightTfIdf))
+      philo_dtm_tfidf = removeSparseTerms(philo_dtm_tfidf, 0.99)
+      freq = data.frame(sort(colSums(as.matrix(philo_dtm_tfidf)), decreasing=TRUE))
+      wordcloud(rownames(freq), freq[,1], max.words=50, colors=brewer.pal(4, "Spectral"))
+}
+
+###temp = subet(dat,school=='capitalist')
+      temp=subset(dat,dat$school=='capitalism')
+      philo_corpus = Corpus(VectorSource(temp$sentence_str))
+      philo_corpus = tm_map(philo_corpus, content_transformer(tolower))
+      philo_corpus = tm_map(philo_corpus, removeNumbers)
+      philo_corpus = tm_map(philo_corpus, removePunctuation)
+      philo_corpus = tm_map(philo_corpus, removeWords, c("the", "and", stopwords("english")))
+      philo_corpus =  tm_map(philo_corpus, stripWhitespace)
+      philo_dtm <- DocumentTermMatrix(philo_corpus)
+      philo_dtm = removeSparseTerms(philo_dtm, 0.99)
+      freq = data.frame(sort(colSums(as.matrix(philo_dtm)), decreasing=TRUE))
+      wordcloud(rownames(freq), freq[,1], max.words=50, colors=brewer.pal(4, "Spectral"))
+      philo_dtm_tfidf <- DocumentTermMatrix(philo_corpus, control = list(weighting = weightTfIdf))
+      philo_dtm_tfidf = removeSparseTerms(philo_dtm_tfidf, 0.99)
+      freq = data.frame(sort(colSums(as.matrix(philo_dtm_tfidf)), decreasing=TRUE))
+      wordcloud(rownames(freq), freq[,1], max.words=50, colors=brewer.pal(4, "Spectral"))

@@ -1,0 +1,80 @@
+packages.used=c("tm", "wordcloud", "RColorBrewer", "dplyr", "tidytext")
+ackages.needed=setdiff(packages.used, 
+                        intersect(installed.packages()[,1], 
+                        packages.used))
+if(length(packages.needed)>0){
+  install.packages(packages.needed, dependencies = TRUE,
+                   repos='http://cran.us.r-project.org')
+}
+
+library(tm)
+library(wordcloud)
+library(RColorBrewer)
+library(dplyr)
+library(tidytext)
+library(knitr)
+library(ggplot2)
+
+#load the dataset
+dat <- read.csv(file ='/Users/fuckmylife/Documents/GitHub/ads-spring2023-project1-RenqiZh/data/philosophy_data.csv')
+
+#get a df w average sentence length group by school
+mean_school <- aggregate(dat$sentence_length, list(dat$school), FUN=mean)
+mean_school$x <- round(mean_school$x,digits=2)
+colnames(mean_school)[2] <- "avg_sent_len"
+colnames(mean_school)[1] <-"school"
+
+#graph of school v sentence length
+ggplot(mean_school,aes(x=reorder(school,avg_sent_len),y=avg_sent_len))+
+geom_bar(stat='identity',aes(fill=school))+
+coord_flip()+
+theme_minimal()+
+geom_text(aes(label=avg_sent_len),size=3,hjust=2)+
+scale_fill_viridis_d()+
+xlab('average sentence length')+
+ylab('school of philosophy')
+
+#start researching time and length
+timedf <- data.frame(dat$author,dat$school,dat$original_publication_date,dat$sentence_length )
+colnames(timedf)<-c('author','school','pub_date','length')
+
+firstrecent_df <-subset(timedf,pub_date >1700 & pub_date <1800)
+secondrecent_df <-subset(timedf,pub_date >1800 & pub_date <1900)
+thirdrecent_df <-subset(timedf,pub_date >1900)
+ancientdf <- subset(timedf,timedf$pub_date<1000)
+
+#graph of recent publication numbers against time from 1700 to 1800
+ggplot(firstrecent_df,aes(x=firstrecent_df$pub_date))+
+geom_bar(stat='count')+
+coord_flip()+
+theme_minimal()+
+geom_text(stat='count', aes(label=..count..),hjust=0.51)+
+xlab('time')+
+ylab('number of publications')
+
+#graph of recent publication numbers against time from 1800 to 1900
+ggplot(secondrecent_df,aes(x=secondrecent_df$pub_date))+
+geom_bar(stat='count')+
+coord_flip()+
+theme_minimal()+
+geom_text(stat='count', aes(label=..count..),hjust=0.51)+
+xlab('time')+
+ylab('number of publications')
+
+#graph of recent publication numbers against time from 1900 
+ggplot(thirdrecent_df,aes(x=thirdrecent_df$pub_date))+
+geom_bar(stat='count')+
+coord_flip()+
+theme_minimal()+
+geom_text(stat='count', aes(label=..count..),hjust=0.51)+
+xlab('time')+
+ylab('number of publications')
+
+#graph of recent publication numbers against time before 1000
+ggplot(ancientdf,aes(x=ancientdf$pub_date))+
+geom_bar(stat='count')+
+coord_flip()+
+theme_minimal()+
+geom_text(stat='count', aes(label=..count..),hjust=0.51)+
+xlab('time')+
+ylab('number of publications')
