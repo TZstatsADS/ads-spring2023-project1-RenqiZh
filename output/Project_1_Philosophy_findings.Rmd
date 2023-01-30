@@ -1,0 +1,13 @@
+---
+title: "Project1_Philoposphy findings"
+author: "Renqi Zhang"
+output: html_document
+---
+
+![`Karl Marx and Adam Smith`](Documents/GitHub/ads-spring2023-project1-RenqiZh/figs/Smith_VS_Marx.jpeg)
+
+**This report takes a glimpse on different philosophy schools based on collected quotes, while focusing on comparing the two famous capitalism philosophers, Karl Marx and Adam Smith. The goal is to see, despite the well-know distinction in theories, is Karl Marx and Adam Smith more similar than different?**
+
+**The data set of this project, which contains 360K philosophy quotes, can be found at <https://www.kaggle.com/datasets/kouroshalizadeh/history-of-philosophy>.**
+
+**In short, each observation in this data set consist of a quote, its title, school and author. Due to the computational burden of such a giant data set, a portion of the analysis was conducted with a subset of the data, and it will be noted.**
