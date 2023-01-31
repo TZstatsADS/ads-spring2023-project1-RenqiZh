@@ -32,7 +32,7 @@ library("stringr")
 dat <- read.csv(file ='/Users/fuckmylife/Documents/GitHub/ads-spring2023-project1-RenqiZh/data/philosophy_data.csv')
 
 ###marx sentimental analysis
-marx2 <- subset(dat,author=='Marx')[1:5000,]
+marx2 <- subset(dat,author=='Marx')[1:2500,]
 rownames(marx2) <- NULL
 marx <- select(marx2,school,author,sentence_lowered,sentence_length)
 
@@ -49,7 +49,7 @@ barplot(sort(colSums(prop.table(marx_emotiondf[, 5:12]))),
   xlab="Percentage")
   
 ###Smith sentimental analysis
-smith2 <- subset(dat,author=='Smith')[1:5000,]
+smith2 <- subset(dat,author=='Smith')[1:2500,]
 rownames(smith2) <- NULL
 smith <- select(smith2,school,author,sentence_lowered,sentence_length)
 

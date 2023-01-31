@@ -38,10 +38,25 @@ ylab('school of philosophy')
 timedf <- data.frame(dat$author,dat$school,dat$original_publication_date,dat$sentence_length )
 colnames(timedf)<-c('author','school','pub_date','length')
 
+recent_df <-subset(timedf,pub_date >1600 & pub_date <1700)
 firstrecent_df <-subset(timedf,pub_date >1700 & pub_date <1800)
 secondrecent_df <-subset(timedf,pub_date >1800 & pub_date <1900)
 thirdrecent_df <-subset(timedf,pub_date >1900)
 ancientdf <- subset(timedf,timedf$pub_date<1000)
+
+#graph of recent publication numbers against time from 1600 to 1700
+ggplot(recent_df,aes(x=recent_df$pub_date))+
+geom_bar(stat='count')+
+coord_flip()+
+theme_minimal()+
+geom_text(stat='count', aes(label=..count..),hjust=0.51)+
+xlab('time')+
+ylab('number of publications')
+
+#spike author
+subset(timedf,pub_date < (1680) & pub_date > (1670)) %>%
+select(c('author','school')) %>%
+unique()
 
 #graph of recent publication numbers against time from 1700 to 1800
 ggplot(firstrecent_df,aes(x=firstrecent_df$pub_date))+
@@ -52,6 +67,12 @@ geom_text(stat='count', aes(label=..count..),hjust=0.51)+
 xlab('time')+
 ylab('number of publications')
 
+#spike author
+subset(timedf,pub_date < (1800) & pub_date > (1775)) %>%
+select(c('author','school')) %>%
+unique()
+
+
 #graph of recent publication numbers against time from 1800 to 1900
 ggplot(secondrecent_df,aes(x=secondrecent_df$pub_date))+
 geom_bar(stat='count')+
@@ -60,6 +81,15 @@ theme_minimal()+
 geom_text(stat='count', aes(label=..count..),hjust=0.51)+
 xlab('time')+
 ylab('number of publications')
+
+#spike author 
+subset(timedf,pub_date < (1825) & pub_date > (1800)) %>%
+select(c('author','school')) %>%
+unique()
+
+subset(timedf,pub_date < (1900) & pub_date > (1875)) %>%
+select(c('author','school')) %>%
+unique()
 
 #graph of recent publication numbers against time from 1900 
 ggplot(thirdrecent_df,aes(x=thirdrecent_df$pub_date))+
@@ -70,6 +100,11 @@ geom_text(stat='count', aes(label=..count..),hjust=0.51)+
 xlab('time')+
 ylab('number of publications')
 
+#spike author
+subset(timedf,pub_date < (1955) & pub_date > (1945)) %>%
+select(c('author','school')) %>%
+unique()
+
 #graph of recent publication numbers against time before 1000
 ggplot(ancientdf,aes(x=ancientdf$pub_date))+
 geom_bar(stat='count')+
@@ -78,3 +113,13 @@ theme_minimal()+
 geom_text(stat='count', aes(label=..count..),hjust=0.51)+
 xlab('time')+
 ylab('number of publications')
+
+#spike author
+subset(timedf,pub_date < (-300)) %>%
+select(c('author','school')) %>%
+unique()
+
+
+
+
+
